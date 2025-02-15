@@ -4,6 +4,10 @@ app = FastAPI()
 
 clients:list[WebSocket] = []
 
+@app.get('/')
+async def hello_endpoint():
+    return {'response': 'hi there!!!'}
+
 @app.websocket("/broadcast")
 async def hello_endpoint(websocket:WebSocket):
     await websocket.accept()
