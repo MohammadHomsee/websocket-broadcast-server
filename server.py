@@ -12,7 +12,6 @@ async def hello_endpoint():
 async def hello_endpoint(websocket:WebSocket):
     await websocket.accept()
     clients.append(websocket)
-    print('client connected')
 
     try:
         while True:
@@ -22,4 +21,3 @@ async def hello_endpoint(websocket:WebSocket):
                 await client.send_text(message)
     except WebSocketDisconnect:
         clients.remove(websocket)
-        print('client disconnected.')
