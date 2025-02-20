@@ -1,12 +1,28 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import UploadFile, Form
+from fastapi.responses import FileResponse
+import os
 
 app = FastAPI()
 
 clients:list[WebSocket] = []
 
+def global_path(local_path:str):
+    return f'store/{local_path}'
+
 @app.get('/')
 async def hello_endpoint():
     return {'response': 'hi there!!!'}
+
+@app.post('/upload')
+async def upload_endpoint(file:UploadFile):
+    with open(global_path(file.filename), 'wb') as output_file:
+        output_file.write(file.file.read())
+    return { 'response': file.filename }
+
+@app.get('/store')
+async def store_endpoint(path:str):
+    return FileResponse(global_path(path))
 
 @app.websocket("/broadcast")
 async def hello_endpoint(websocket:WebSocket):
